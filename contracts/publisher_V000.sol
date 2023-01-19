@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-// TODO: ADD PUB COUNTS BY CREATOR
+/*
+TODO
+- ADD PUB COUNTS BY CREATOR
+- Add field for hashing
+*/
 
 contract Publisher {
 
-    address public owner;
-    uint256 public counter;
+    address private owner;
+    uint256 private counter;
 
     constructor() {
         owner = msg.sender;
@@ -31,6 +35,7 @@ contract Publisher {
 
     mapping(uint256 => Publication) publications;
 
+    // create a single publication
     function publish(
         string memory title,
         string memory authors,
@@ -54,10 +59,12 @@ contract Publisher {
             counter ++;
     }
 
+    // get the current count
     function getCount() public view returns (uint256) {
         return (counter);
     }
 
+    // get a single publication byy its ID
     function getPublication(uint256 id) public view returns (
         uint256,
         address,
@@ -66,7 +73,6 @@ contract Publisher {
         string memory
     ) {
         require(id < counter, "Publication ID does not exist");
-
         Publication storage p = publications[id];
         return (p.id, p.creator, p.title, p.authors, p.description);
     }
