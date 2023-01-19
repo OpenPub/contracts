@@ -5,6 +5,15 @@ pragma solidity ^0.8.7;
 TODO
 - ADD PUB COUNTS BY CREATOR
 - Add field for hashing
+
+other fields
+- links?
+- contact info?
+- messaging to eth address?
+
+other contracts
+- voting on quality
+
 */
 
 contract Publisher {
