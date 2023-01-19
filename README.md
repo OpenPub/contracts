@@ -1,2 +1,2 @@
-# contracts
-Smart contracts for OpenPub
+# OpenPub contracts
+
