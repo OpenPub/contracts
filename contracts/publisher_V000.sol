@@ -1,21 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-/*
-TODO
-- ADD PUB COUNTS BY CREATOR
-- Add field for hashing
-
-other fields
-- links?
-- contact info?
-- messaging to eth address?
-
-other contracts
-- voting on quality
-
-*/
-
 contract Publisher {
 
     address private owner;
@@ -27,19 +12,25 @@ contract Publisher {
      }
 
     struct Publication {
-        uint256 id;
+        uint256 _id;
         address creator;
         string title;
-        string authors;
+        string[] authors;
+        string content_link;
+        string content_sha256;
         string description;
+        string acknowledgement;
     }
 
     event newPublicationEvent (
-        uint256 id, 
+        uint256 _id, 
         address creator,
         string title,
-        string authors,
-        string description
+        string[] authors,
+        string content_link,
+        string content_sha256,
+        string description,
+        string acknowledgement
     );
 
     mapping(uint256 => Publication) publications;
@@ -47,42 +38,61 @@ contract Publisher {
     // create a single publication
     function publish(
         string memory title,
-        string memory authors,
-        string memory description
+        string[] memory authors,
+        string memory content_link,
+        string memory content_sha256,
+        string memory description,
+        string memory acknowledgement
     ) public payable {
-            Publication storage newPublication = publications[counter];
-            newPublication.id = counter;
-            newPublication.creator = msg.sender;
-            newPublication.title = title;
-            newPublication.authors = authors;
-            newPublication.description = description;
-
+            Publication storage p = publications[counter];
+            p._id = counter;
+            p.creator = msg.sender;
+            p.title = title;
+            p.authors = authors;
+            p.content_link = content_link;
+            p.content_sha256 = content_sha256;
+            p.description = description;
+            p.acknowledgement = acknowledgement;
             emit newPublicationEvent(
                 counter, 
                 msg.sender, 
                 title,
                 authors,
-                description
+                content_link,
+                content_sha256,
+                description,
+                acknowledgement
             );
-
             counter ++;
     }
 
-    // get the current count
+    // get the current publication count
     function getCount() public view returns (uint256) {
         return (counter);
     }
 
-    // get a single publication byy its ID
-    function getPublication(uint256 id) public view returns (
+    // get a single publication by its ID
+    function getPublication(uint256 _id) public view returns (
         uint256,
         address,
+        string memory,
+        string[] memory,
+        string memory,
         string memory,
         string memory,
         string memory
     ) {
-        require(id < counter, "Publication ID does not exist");
-        Publication storage p = publications[id];
-        return (p.id, p.creator, p.title, p.authors, p.description);
+        require(_id < counter, "Publication ID does not exist");
+        Publication storage p = publications[_id];
+        return (
+            p._id,
+            p.creator,
+            p.title,
+            p.authors,
+            p.content_link,
+            p.content_sha256,
+            p.description,
+            p.acknowledgement
+        );
     }
 }
